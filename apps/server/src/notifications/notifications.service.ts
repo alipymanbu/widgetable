@@ -89,10 +89,7 @@ export class NotificationsService {
 
 		for (const sub of subscriptions) {
 			try {
-				await webpush.sendNotification(
-					{ endpoint: sub.endpoint, keys: sub.keys as webpush.PushSubscription['keys'] },
-					data,
-				);
+				await webpush.sendNotification({ endpoint: sub.endpoint, keys: sub.keys }, data);
 			} catch (error) {
 				const err = error as { statusCode?: number };
 				if (

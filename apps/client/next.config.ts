@@ -1,5 +1,5 @@
 import { join } from "path";
-import withPWA from "next-pwa";
+import withPWA from "@ducanh2912/next-pwa";
 
 const remotePatterns: { protocol: "http" | "https"; hostname: string; port?: string; pathname: string }[] = [
 	{ protocol: "http", hostname: "localhost", port: "3001", pathname: "/**" },
@@ -45,19 +45,7 @@ const nextConfig = {
 export default withPWA({
 	dest: "public",
 	disable: process.env.NODE_ENV !== "production",
-	skipWaiting: true,
 	register: false,
-	importScripts: ["/push-sw.js"],
-	buildExcludes: [
-		/middleware-manifest\.json$/,
-		/app-build-manifest\.json$/,
-		/_buildManifest\.js$/,
-		/_ssgManifest\.js$/,
-		/\.map$/,
-		/manifest\.json$/,
-		/^manifest.*\.js$/,
-		/\.well-known\//,
-	],
 	publicExcludes: [
 		"!assets/**/*",
 		"!assets_new/**/*",
@@ -67,30 +55,44 @@ export default withPWA({
 		"!fonts/**/*",
 	],
 	dynamicStartUrlRedirect: "/auth",
-	runtimeCaching: [
-		{
-			// Static images: sprites, backgrounds, assets
-			urlPattern: /\.(png|jpg|jpeg|webp|gif|svg)$/i,
-			handler: "CacheFirst",
-			options: {
-				cacheName: "images",
-				expiration: {
-					maxEntries: 200,
-					maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
+	workboxOptions: {
+		skipWaiting: true,
+		importScripts: ["/push-sw.js"],
+		exclude: [
+			/middleware-manifest\.json$/,
+			/app-build-manifest\.json$/,
+			/_buildManifest\.js$/,
+			/_ssgManifest\.js$/,
+			/\.map$/,
+			/manifest\.json$/,
+			/^manifest.*\.js$/,
+			/\.well-known\//,
+		],
+		runtimeCaching: [
+			{
+				// Static images: sprites, backgrounds, assets
+				urlPattern: /\.(png|jpg|jpeg|webp|gif|svg)$/i,
+				handler: "CacheFirst",
+				options: {
+					cacheName: "images",
+					expiration: {
+						maxEntries: 200,
+						maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
+					},
 				},
 			},
-		},
-		{
-			// Profile pictures from API
-			urlPattern: /\/users\/.*\/picture/,
-			handler: "StaleWhileRevalidate",
-			options: {
-				cacheName: "profile-pictures",
-				expiration: {
-					maxEntries: 50,
-					maxAgeSeconds: 7 * 24 * 60 * 60, // 7 days
+			{
+				// Profile pictures from API
+				urlPattern: /\/users\/.*\/picture/,
+				handler: "StaleWhileRevalidate",
+				options: {
+					cacheName: "profile-pictures",
+					expiration: {
+						maxEntries: 50,
+						maxAgeSeconds: 7 * 24 * 60 * 60, // 7 days
+					},
 				},
 			},
-		},
-	],
+		],
+	},
 })(nextConfig);

@@ -133,9 +133,7 @@ export const usePet = () => {
 
 		return friends
 			.filter((friend) => {
-				const isAlreadyParent = pet.parents.some(
-					(parent) => getParentId(parent as string | { _id: string }) === friend._id,
-				);
+				const isAlreadyParent = pet.parents.some((parent) => getParentId(parent) === friend._id);
 				return !isAlreadyParent;
 			})
 			.map((friend) => ({

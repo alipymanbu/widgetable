@@ -11,6 +11,6 @@
 		"format": "prettier --write \"src/**/*.{ts,tsx}\" || true"
 	},
 	"devDependencies": {
-		"typescript": "^5.0.0"
+		"typescript": "^5.9.3"
 	}
 }

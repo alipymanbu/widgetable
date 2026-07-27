@@ -99,7 +99,7 @@ export const useFriends = (userId: string) => {
 				await api.post(`/friends/requests/${requestId}/accept`);
 				const request = requests.received.find((r) => r._id === requestId);
 				if (request?.sender) {
-					dispatch(addFriend(request.sender as User));
+					dispatch(addFriend(request.sender));
 					dispatch(removeFriendRequestReceived(requestId));
 				}
 				callSuccess(t('friends.friendAdded'));
